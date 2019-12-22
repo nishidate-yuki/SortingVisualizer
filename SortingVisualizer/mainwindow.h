@@ -45,7 +45,7 @@ private:
     QList<int> array;
     int arraySize;
     int barWidth = 5;
-    bool isSorted;
+    bool isSorted = false;
 };
 
 #endif // MAINWINDOW_H

@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setWindowTitle(tr("Sorting Visualizer"));
+    setUnifiedTitleAndToolBarOnMac(true);
 
     // Setup GraphicsView
     scene = new GraphicsScene(itemMenu, this);
@@ -13,7 +15,6 @@ MainWindow::MainWindow(QWidget *parent) :
     view->setRenderHint(QPainter::Antialiasing);
 //    view->setStyleSheet("QGraphicsView { background-color : #ffffff; }");
     view->setMinimumSize(500, 500);
-//    view->setMaximumSize(400, 400);
     ui->gridLayout->addWidget(view);
 }
 
@@ -24,12 +25,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::draw()
 {
-    qDebug() << "draw()";
     scene->clear();
 
     for(int i=0; i<arraySize; i++){
         QBrush brush = QBrush(QColor(255,255-array[i],0));
-        scene->addRect(/*x=*/ barWidth*i, /*y=*/0, /*w=*/barWidth, /*h=*/-array[i], pen, brush);
+        scene->addRect(barWidth*i, 0, barWidth, -array[i], pen, brush);
         view->fitInView(scene->sceneRect());
     }
 }
