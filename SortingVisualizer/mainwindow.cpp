@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     view = new GraphicsView(scene);
     view->setRenderHint(QPainter::Antialiasing);
 //    view->setStyleSheet("QGraphicsView { background-color : #ffffff; }");
-    view->setMinimumSize(400, 400);
-    view->setMaximumSize(400, 400);
+    view->setMinimumSize(500, 500);
+//    view->setMaximumSize(400, 400);
     ui->gridLayout->addWidget(view);
 }
 
@@ -91,9 +91,13 @@ void MainWindow::sleep()
     loop.exec();
 }
 
-void MainWindow::on_pushButton_clicked()
+void MainWindow::generate()
 {
-    arraySize = 64;
+    scene->clear();
+    array.clear();
+    isSorted = false;
+
+    arraySize = ui->comboBox->currentText().toInt();
 
     for(int i=0; i<arraySize; i++){
         array.append(qrand()%256);
@@ -101,15 +105,23 @@ void MainWindow::on_pushButton_clicked()
         scene->addRect(/*x=*/ barWidth*i, /*y=*/0, /*w=*/barWidth, /*h=*/-array[i], pen, brush);
         view->fitInView(scene->sceneRect());
     }
+}
 
-//    qDebug() << view->width() << view->height();
-//    qDebug() << scene->sceneRect();
+void MainWindow::on_pushButton_clicked()
+{
+    qDebug() << "on_pushButton_clicked()";
+    generate();
 }
 
 void MainWindow::on_pushButton_2_clicked()
 {
     qDebug() << "on_pushButton_2_clicked()";
-//    simpleSort();
-//    insertionSort();
-    shellSort();
+
+    if(isSorted) generate();
+
+    QString kind = ui->comboBox_2->currentText();
+    if(kind == "Simple Sort")    simpleSort();
+    if(kind == "Insertion Sort") insertionSort();
+    if(kind == "Shell Sort")     shellSort();
+    isSorted = true;
 }

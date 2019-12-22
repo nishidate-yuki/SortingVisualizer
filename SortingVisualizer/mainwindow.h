@@ -22,6 +22,7 @@ public:
 
     void draw();
     void sleep();
+    void generate();
 
     // Sort
     void simpleSort();
@@ -44,6 +45,7 @@ private:
     QList<int> array;
     int arraySize;
     int barWidth = 5;
+    bool isSorted;
 };
 
 #endif // MAINWINDOW_H
