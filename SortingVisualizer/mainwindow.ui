@@ -104,7 +104,17 @@
           </item>
           <item>
            <property name="text">
+            <string>Bubble Sort</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Insertion Sort</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Selection Sort</string>
            </property>
           </item>
           <item>

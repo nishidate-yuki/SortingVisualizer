@@ -20,14 +20,17 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void draw();
+    void draw(int a=-1, int b=-1);
     void sleep();
     void generate();
+    void resetScene();
 
     // Sort
     void simpleSort();
     void insertionSort();
     void shellSort();
+    void bubbleSort();
+    void selectionSort();
 
 private slots:
     void on_pushButton_clicked();
@@ -45,7 +48,7 @@ private:
     QList<int> array;
     int arraySize;
     int barWidth = 5;
-    bool isSorted = false;
+    bool isSorted = true;
 };
 
 #endif // MAINWINDOW_H

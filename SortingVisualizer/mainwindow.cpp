@@ -13,7 +13,6 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new GraphicsScene(itemMenu, this);
     view = new GraphicsView(scene);
     view->setRenderHint(QPainter::Antialiasing);
-//    view->setStyleSheet("QGraphicsView { background-color : #ffffff; }");
     view->setMinimumSize(500, 500);
     ui->gridLayout->addWidget(view);
 }
@@ -23,88 +22,129 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::draw()
+void MainWindow::draw(int a, int b)
 {
     scene->clear();
 
     for(int i=0; i<arraySize; i++){
         QBrush brush = QBrush(QColor(255,255-array[i],0));
+        if(i == a || i == b) brush.setColor(QColor(0, 0, 255));
         scene->addRect(barWidth*i, 0, barWidth, -array[i], pen, brush);
         view->fitInView(scene->sceneRect());
     }
 }
 
+// ----- Sort -----
 void MainWindow::simpleSort()
 {
     qDebug() << "simpleSort()";
     for(int i=0; i<arraySize; i++){
         for(int j=i+1;j<arraySize;j++){
+            sleep();
+            draw(i, j);
             if(array[j] < array[i]){
                 array.swapItemsAt(i, j);
-
-                sleep();
-                draw();
             }
         }
     }
-    qDebug() << "Sorting Complete";
+    draw();
 }
 
 void MainWindow::insertionSort()
 {
+    qDebug() << "insertionSort()";
     for(int i=1; i<arraySize; i++){
         for(int j=i-1; j>=0; j--){
+            sleep();
+            draw(i, j);
             if(array[j] > array[j+1]){
                 array.swapItemsAt(j, j+1);
-                sleep();
-                draw();
-            }else{
-                break;
-            }
+            }else break;
         }
     }
+    draw();
 }
 
 void MainWindow::shellSort()
 {
+    qDebug() << "shellSort()";
     int h = 1;
     while(h < arraySize) h = 3*h + 1;
     while(h > 1){
         h /= 3;
         for(int i=h; i<arraySize; i++){
             for(int j=i-h; j>=0; j-=h){
+                sleep();
+                draw(j, j+h);
                 if(array[j] > array[j+h]){
                     array.swapItemsAt(j, j+h);
-                    sleep();
-                    draw();
-                }
-                else break;
+                }else break;
             }
         }
     }
+    draw();
+}
+
+void MainWindow::bubbleSort()
+{
+    qDebug() << "bubbleSort()";
+    for(int i=0; i<arraySize-1; i++){
+        for(int j=arraySize-1; j>i; j--){
+            sleep();
+            draw(i, j);
+            if(array[j-1] > array[j]){
+                array.swapItemsAt(j-1, j);
+            }
+        }
+    }
+    draw();
+}
+
+void MainWindow::selectionSort()
+{
+    qDebug() << "selectionSort()";
+    for(int i=0; i<arraySize; i++){
+        int minPos = i;
+        for(int j=i+1;j<arraySize;j++){
+            sleep();
+            draw(i, j);
+            if(array[j] < array[minPos]){
+                minPos = j;
+            }
+        }
+        array.swapItemsAt(i, minPos);
+//        draw(i, minPos);
+    }
+    draw();
 }
 
 void MainWindow::sleep()
 {
     QEventLoop loop;
-    QTimer::singleShot(5, &loop, SLOT(quit()));
+    QTimer::singleShot(1, &loop, SLOT(quit()));
     loop.exec();
 }
 
 void MainWindow::generate()
 {
-    scene->clear();
+    resetScene();
     array.clear();
     isSorted = false;
 
     arraySize = ui->comboBox->currentText().toInt();
-
     for(int i=0; i<arraySize; i++){
         array.append(qrand()%256);
         QBrush brush = QBrush(QColor(255,255-array[i],0));
-        scene->addRect(/*x=*/ barWidth*i, /*y=*/0, /*w=*/barWidth, /*h=*/-array[i], pen, brush);
+        scene->addRect(barWidth*i, 0, barWidth, -array[i], pen, brush);
         view->fitInView(scene->sceneRect());
     }
+}
+
+void MainWindow::resetScene()
+{
+    delete(scene);
+    scene = new GraphicsScene(itemMenu, this);
+    view->setScene(scene);
 }
 
 void MainWindow::on_pushButton_clicked()
@@ -123,5 +163,7 @@ void MainWindow::on_pushButton_2_clicked()
     if(kind == "Simple Sort")    simpleSort();
     if(kind == "Insertion Sort") insertionSort();
     if(kind == "Shell Sort")     shellSort();
+    if(kind == "Bubble Sort")    bubbleSort();
+    if(kind == "Selection Sort") selectionSort();
     isSorted = true;
 }
