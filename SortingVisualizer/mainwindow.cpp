@@ -172,6 +172,7 @@ void MainWindow::on_pushButton_2_clicked()
 
     if(isSorted) generate();
 
+    isRunning = true;
     QString kind = ui->comboBox_2->currentText();
     if(kind == "Simple Sort")    simpleSort();
     if(kind == "Insertion Sort") insertionSort();
@@ -179,4 +180,12 @@ void MainWindow::on_pushButton_2_clicked()
     if(kind == "Bubble Sort")    bubbleSort();
     if(kind == "Selection Sort") selectionSort();
     isSorted = true;
+    isRunning = false;
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    qDebug() << "on_pushButton_3_clicked()";
+    isRunning = !isRunning;
+    while(!isRunning) sleep();
 }
