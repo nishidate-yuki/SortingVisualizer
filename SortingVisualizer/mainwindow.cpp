@@ -15,6 +15,13 @@ MainWindow::MainWindow(QWidget *parent) :
     view->setRenderHint(QPainter::Antialiasing);
     view->setMinimumSize(500, 500);
     ui->gridLayout->addWidget(view);
+
+    // Color Button
+    QPalette pal;
+    pal.setColor(QPalette::Button, QColor(255, 255, 0));
+    ui->pushButton_4->setPalette(pal);
+    pal.setColor(QPalette::Button, QColor(255, 0, 0));
+    ui->pushButton_5->setPalette(pal);
 }
 
 MainWindow::~MainWindow()
@@ -25,9 +32,18 @@ MainWindow::~MainWindow()
 void MainWindow::draw(int a, int b)
 {
     scene->clear();
+    QColor startColor = ui->pushButton_4->palette().color(QPalette::Button);
+    QColor endColor = ui->pushButton_5->palette().color(QPalette::Button);
+    QVector3D diffColor(endColor.red() - startColor.red(),
+                     endColor.green() - startColor.green(),
+                     endColor.blue() - startColor.blue());
+
 
     for(int i=0; i<arraySize; i++){
-        QBrush brush = QBrush(QColor(255,255-array[i],0));
+        QColor color(startColor.red()   + diffColor.x()*array[i]/255,
+                     startColor.green() + diffColor.y()*array[i]/255,
+                     startColor.blue()  + diffColor.z()*array[i]/255);
+        QBrush brush(color);
         if(i == a || i == b) brush.setColor(QColor(0, 0, 255));
         scene->addRect(barWidth*i, 0, barWidth, -array[i], pen, brush);
         view->fitInView(scene->sceneRect());
@@ -131,26 +147,16 @@ void MainWindow::generate()
     isSorted = false;
 
     arraySize = ui->comboBox->currentText().toInt();
-    if(ui->comboBox_3->currentText() == "Random"){
-        for(int i=0; i<arraySize; i++){
+
+    for (int i=0;i<arraySize;i++) {
+        if(ui->comboBox_3->currentText() == "Random"){
             array.append(qrand()%255+1);
-            QBrush brush = QBrush(QColor(255,255-array[i],0));
-            scene->addRect(barWidth*i, 0, barWidth, -array[i], pen, brush);
-        }
-    }else if(ui->comboBox_3->currentText() == "Ascending"){
-        for (int i=0;i<arraySize;i++) {
+        }else if(ui->comboBox_3->currentText() == "Ascending"){
             array.append(i*255/arraySize);
-            QBrush brush = QBrush(QColor(255,255-(array[i]),0));
-            scene->addRect(barWidth*i, 0, barWidth, -array[i], pen, brush);
-        }
-    }else if(ui->comboBox_3->currentText() == "Descending"){
-        for (int i=0;i<arraySize;i++) {
+        }else if(ui->comboBox_3->currentText() == "Descending"){
             array.append(255 - i*255/arraySize);
-            QBrush brush = QBrush(QColor(255,255-array[i],0));
-            scene->addRect(barWidth*i, 0, barWidth, -array[i], pen, brush);
         }
     }
-    view->fitInView(scene->sceneRect());
 }
 
 void MainWindow::resetScene()
@@ -160,10 +166,21 @@ void MainWindow::resetScene()
     view->setScene(scene);
 }
 
+void MainWindow::updateColor()
+{
+    startColor = ui->pushButton_4->palette().color(QPalette::Button);
+    endColor = ui->pushButton_5->palette().color(QPalette::Button);
+    diffColor = QVector3D(endColor.red() - startColor.red(),
+                          endColor.green() - startColor.green(),
+                          endColor.blue() - startColor.blue());
+}
+
 void MainWindow::on_pushButton_clicked()
 {
     qDebug() << "on_pushButton_clicked()";
     generate();
+    updateColor();
+    draw();
 }
 
 void MainWindow::on_pushButton_2_clicked()
@@ -171,6 +188,7 @@ void MainWindow::on_pushButton_2_clicked()
     qDebug() << "on_pushButton_2_clicked()";
 
     if(isSorted) generate();
+    updateColor();
 
     isRunning = true;
     QString kind = ui->comboBox_2->currentText();
@@ -188,4 +206,28 @@ void MainWindow::on_pushButton_3_clicked()
     qDebug() << "on_pushButton_3_clicked()";
     isRunning = !isRunning;
     while(!isRunning) sleep();
+}
+
+void MainWindow::on_pushButton_4_clicked()
+{
+    qDebug() << "on_pushButton_4_clicked()";
+    QColor chosenColor = QColorDialog::getColor();
+    if(chosenColor.isValid()){
+        QPalette pal;
+        pal.setColor(QPalette::Button, chosenColor);
+        ui->pushButton_4->setPalette(pal);
+        ui->pushButton_4->update();
+    }
+}
+
+void MainWindow::on_pushButton_5_clicked()
+{
+    qDebug() << "on_pushButton_5_clicked()";
+    QColor chosenColor = QColorDialog::getColor();
+    if(chosenColor.isValid()){
+        QPalette pal;
+        pal.setColor(QPalette::Button, chosenColor);
+        ui->pushButton_5->setPalette(pal);
+        ui->pushButton_5->update();
+    }
 }

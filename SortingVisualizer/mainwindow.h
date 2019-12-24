@@ -24,6 +24,7 @@ public:
     void sleep();
     void generate();
     void resetScene();
+    void updateColor();
 
     // Sort
     void simpleSort();
@@ -39,6 +40,10 @@ private slots:
 
     void on_pushButton_3_clicked();
 
+    void on_pushButton_4_clicked();
+
+    void on_pushButton_5_clicked();
+
 private:
     Ui::MainWindow *ui;
     QMenu *itemMenu;
@@ -46,6 +51,9 @@ private:
     GraphicsView *view;
 
     QPen pen = QPen(Qt::NoPen);
+    QColor startColor;
+    QColor endColor;
+    QVector3D diffColor;
 
     QList<int> array;
     int arraySize;
