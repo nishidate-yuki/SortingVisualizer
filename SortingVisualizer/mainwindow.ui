@@ -179,6 +179,11 @@
                <string>Shell Sort</string>
               </property>
              </item>
+             <item>
+              <property name="text">
+               <string>Heap Sort</string>
+              </property>
+             </item>
             </widget>
            </item>
           </layout>

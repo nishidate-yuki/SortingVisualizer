@@ -50,7 +50,8 @@ void MainWindow::draw(int a, int b)
     }
 }
 
-// ----- Sort -----
+// --------------------------
+// ---------- Sort ----------
 void MainWindow::simpleSort()
 {
     qDebug() << "simpleSort()";
@@ -133,6 +134,47 @@ void MainWindow::selectionSort()
     draw();
 }
 
+void MainWindow::heapSort()
+{
+    qDebug() << "heapSort()";
+    // Generate Heap
+    for(int i=arraySize/2-1; i>=0; i--){
+        // 子を持つ最小ノードからルートに向かってdownHeap
+        downHeap(i, arraySize-1);
+    }
+    // Shift Up
+    for(int i=arraySize-1; i>=1; i--){
+        // ルートを一番後ろから詰めていく
+        array.swapItemsAt(0, i);
+        downHeap(0, i-1);
+    }
+    draw();
+}
+
+void MainWindow::downHeap(int parent, int last)
+{
+    while(true){
+        int child = 2*parent + 1; // Left
+        if(child > last) return;
+        if(child != last){ // Rightがある
+            if(array[child+1] > array[child]){
+                child++; // Right
+            }
+        }
+        if(array[parent] >= array[child]) return;
+        // Swap
+        array.swapItemsAt(parent, child);
+        parent = child;
+        sleep();
+        draw(parent, last);
+    }
+}
+
+
+
+// ---------- Sort ----------
+// --------------------------
+
 void MainWindow::sleep()
 {
     QEventLoop loop;
@@ -197,6 +239,7 @@ void MainWindow::on_pushButton_2_clicked()
     if(kind == "Shell Sort")     shellSort();
     if(kind == "Bubble Sort")    bubbleSort();
     if(kind == "Selection Sort") selectionSort();
+    if(kind == "Heap Sort") heapSort();
     isSorted = true;
     isRunning = false;
 }

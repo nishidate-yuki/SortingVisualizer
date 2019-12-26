@@ -32,6 +32,8 @@ public:
     void shellSort();
     void bubbleSort();
     void selectionSort();
+    void heapSort();
+    void downHeap(int parent, int size);
 
 private slots:
     void on_pushButton_clicked();
