@@ -184,6 +184,11 @@
                <string>Heap Sort</string>
               </property>
              </item>
+             <item>
+              <property name="text">
+               <string>Merge Sort</string>
+              </property>
+             </item>
             </widget>
            </item>
           </layout>

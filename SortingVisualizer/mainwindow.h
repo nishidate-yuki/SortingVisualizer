@@ -34,6 +34,9 @@ public:
     void selectionSort();
     void heapSort();
     void downHeap(int parent, int size);
+    void merge(int size, QList<int> &from, QList<int> &into);
+    void mergeSort();
+    void put(int &inx, int &k, QList<int> &from, QList<int> &into);
 
 private slots:
     void on_pushButton_clicked();

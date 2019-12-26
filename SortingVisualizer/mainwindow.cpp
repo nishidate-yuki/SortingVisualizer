@@ -54,7 +54,6 @@ void MainWindow::draw(int a, int b)
 // ---------- Sort ----------
 void MainWindow::simpleSort()
 {
-    qDebug() << "simpleSort()";
     for(int i=0; i<arraySize; i++){
         for(int j=i+1;j<arraySize;j++){
             if(array[j] < array[i]){
@@ -69,7 +68,6 @@ void MainWindow::simpleSort()
 
 void MainWindow::insertionSort()
 {
-    qDebug() << "insertionSort()";
     for(int i=1; i<arraySize; i++){
         for(int j=i-1; j>=0; j--){
             if(array[j] > array[j+1]){
@@ -84,7 +82,6 @@ void MainWindow::insertionSort()
 
 void MainWindow::shellSort()
 {
-    qDebug() << "shellSort()";
     int h = 1;
     while(h < arraySize) h = 3*h + 1;
     while(h > 1){
@@ -104,7 +101,6 @@ void MainWindow::shellSort()
 
 void MainWindow::bubbleSort()
 {
-    qDebug() << "bubbleSort()";
     for(int i=0; i<arraySize-1; i++){
         for(int j=arraySize-1; j>i; j--){
             if(array[j-1] > array[j]){
@@ -119,7 +115,6 @@ void MainWindow::bubbleSort()
 
 void MainWindow::selectionSort()
 {
-    qDebug() << "selectionSort()";
     for(int i=0; i<arraySize; i++){
         int minPos = i;
         for(int j=i+1;j<arraySize;j++){
@@ -136,7 +131,6 @@ void MainWindow::selectionSort()
 
 void MainWindow::heapSort()
 {
-    qDebug() << "heapSort()";
     // Generate Heap
     for(int i=arraySize/2-1; i>=0; i--){
         // 子を持つ最小ノードからルートに向かってdownHeap
@@ -150,16 +144,13 @@ void MainWindow::heapSort()
     }
     draw();
 }
-
 void MainWindow::downHeap(int parent, int last)
 {
     while(true){
         int child = 2*parent + 1; // Left
         if(child > last) return;
-        if(child != last){ // Rightがある
-            if(array[child+1] > array[child]){
-                child++; // Right
-            }
+        if(child!=last && array[child+1]>array[child]){
+            child++; // Right
         }
         if(array[parent] >= array[child]) return;
         // Swap
@@ -169,6 +160,52 @@ void MainWindow::downHeap(int parent, int last)
         draw(parent, last);
     }
 }
+
+void MainWindow::merge(int size, QList<int> &from, QList<int> &into)
+{
+    int start = 0;
+    while(start <= arraySize){
+        // 位置を初期化
+        int i = start, j = start+size, k = start;
+        int iend = qMin(start+size-1, arraySize-1);
+        int jend = qMin(start+2*size-1, arraySize-1);
+        // 小さい方を入れていく
+        while(i <= iend && j<= jend){
+            if(from[i] <= from[j])
+                put(i, k, from, into);
+            else
+                put(j, k, from, into);
+        }
+        // 先に後ろがなくなった場合
+        while(i <= iend) put(i, k, from, into);
+        // 先に前がなくなった場合
+        while(j <= jend) put(j, k, from, into);
+        start += 2*size;
+    }
+}
+void MainWindow::put(int &inx, int &k, QList<int> &from, QList<int> &into)
+{
+    into[k] = from[inx];
+    sleep();
+    draw(k, inx);
+    inx++;
+    k++;
+}
+void MainWindow::mergeSort()
+{
+    QList<int> array2;
+    for(int i=0; i<arraySize; i++) array2.append(0);
+
+    int seqSize = 1;
+    while(seqSize < arraySize){
+        merge(seqSize, array, array2);
+        merge(seqSize*2, array2, array);
+        seqSize *= 4;
+    }
+    draw();
+}
+
+
 
 
 
@@ -240,8 +277,11 @@ void MainWindow::on_pushButton_2_clicked()
     if(kind == "Bubble Sort")    bubbleSort();
     if(kind == "Selection Sort") selectionSort();
     if(kind == "Heap Sort") heapSort();
+    if(kind == "Merge Sort") mergeSort();
     isSorted = true;
     isRunning = false;
+
+    qDebug() << "Completed:" << kind;
 }
 
 void MainWindow::on_pushButton_3_clicked()
