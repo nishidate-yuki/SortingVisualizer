@@ -23,6 +23,9 @@ public:
     void draw(int a=-1, int b=-1);
     void sleep();
     void generate();
+    void generateRandomSequence();
+    void generateAscendingSequence();
+    void generateDescendingSequence();
     void resetScene();
     void updateColor();
 
@@ -33,10 +36,13 @@ public:
     void bubbleSort();
     void selectionSort();
     void heapSort();
+    void mergeSort();
+    void quickSort();
+
     void downHeap(int parent, int size);
     void merge(int size, QList<int> &from, QList<int> &into);
-    void mergeSort();
     void put(int &inx, int &k, QList<int> &from, QList<int> &into);
+    void sort3(int &w1, int &w2, int &w3);
 
 private slots:
     void on_pushButton_clicked();

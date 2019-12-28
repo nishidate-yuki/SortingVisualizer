@@ -166,17 +166,22 @@
              </item>
              <item>
               <property name="text">
-               <string>Insertion Sort</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
                <string>Selection Sort</string>
               </property>
              </item>
              <item>
               <property name="text">
+               <string>Insertion Sort</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>Shell Sort</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Quick Sort</string>
               </property>
              </item>
              <item>

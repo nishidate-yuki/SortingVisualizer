@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QRandomGenerator>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -191,6 +192,19 @@ void MainWindow::put(int &inx, int &k, QList<int> &from, QList<int> &into)
     inx++;
     k++;
 }
+
+void MainWindow::sort3(int &w1, int &w2, int &w3)
+{
+    if(w1 > w2){
+        qSwap(w1, w2);
+    }
+    if(w2 > w3){
+        qSwap(w2, w3);
+        if(w1 > w2){
+             qSwap(w1, w2);
+        }
+    }
+}
 void MainWindow::mergeSort()
 {
     QList<int> array2;
@@ -205,9 +219,68 @@ void MainWindow::mergeSort()
     draw();
 }
 
+void MainWindow::quickSort()
+{
+    QPair<int, int> stack[40];
+    int limit = 10, sp = 0;
+    stack[0].first = 0;
+    stack[0].second = arraySize-1;
 
+    do{
+        int left  = stack[sp].first;
+        int right = stack[sp].second;
+        sp--;
 
+        while(right-left >= limit){
+            int w1 = array[left];
+            int w2 = array[right];
+            int center = (left+right)/2;
+            int w3 = array[center];
+            sort3(w1, w2, w3);
 
+            // サンプル値のMin,Maxは先に左右に置く
+            array[left] = w1;
+            array[right] = w3;
+            // Medianは左から2つ目に置き、centerに元の値を置いておく
+            array[center] = array[left+1];
+            array[left+1] = w2;
+
+            int pivot = w2;
+            int i = qMin(left+2, arraySize-1);
+            int j = qMax(right-1, 0);
+
+            do{
+                // 前からpivotに反する要素まで動かす
+                while(array[i] < pivot) i++;
+                // 後ろからpivotに反する要素まで動かす
+                while(array[j] > pivot) j--;
+
+                if(i < j) array.swapItemsAt(i, j);
+                sleep();
+                draw(i, j);
+            }while(i < j);
+
+            array.swapItemsAt(j, left+1);
+            sleep();
+            draw(j, left+1);
+
+            // 狭い範囲を次に処理(広い方はスタックに入れる)
+            sp++;
+            if(j-left <= right-j){
+                stack[sp].first  = j+1;
+                stack[sp].second = right;
+                right = j-1;    // 次に実行する
+            }else{
+                stack[sp].first = left;
+                stack[sp].second = j-1;
+                left = j+1;    // 次に実行する
+            }
+        }
+    }while(sp>=0);
+
+    insertionSort();
+    draw();
+}
 
 // ---------- Sort ----------
 // --------------------------
@@ -224,18 +297,35 @@ void MainWindow::generate()
     resetScene();
     array.clear();
     isSorted = false;
-
     arraySize = ui->comboBox->currentText().toInt();
 
-    for (int i=0;i<arraySize;i++) {
-        if(ui->comboBox_3->currentText() == "Random"){
-            array.append(qrand()%255+1);
-        }else if(ui->comboBox_3->currentText() == "Ascending"){
-            array.append(i*255/arraySize);
-        }else if(ui->comboBox_3->currentText() == "Descending"){
-            array.append(255 - i*255/arraySize);
-        }
+    if(ui->comboBox_3->currentText() == "Random")
+        generateRandomSequence();
+    if(ui->comboBox_3->currentText() == "Ascending")
+        generateAscendingSequence();
+    if(ui->comboBox_3->currentText() == "Descending")
+        generateDescendingSequence();
+}
+
+void MainWindow::generateRandomSequence()
+{
+    generateAscendingSequence();
+    for (int i=0;i<arraySize;i++){
+        int j = qrand()%arraySize;
+        array.swapItemsAt(i, j);
     }
+}
+
+void MainWindow::generateAscendingSequence()
+{
+    for (int i=0;i<arraySize;i++)
+        array.append((i+1)*255/arraySize);
+}
+
+void MainWindow::generateDescendingSequence()
+{
+    for (int i=0;i<arraySize;i++)
+        array.append(255 - i*255/arraySize);
 }
 
 void MainWindow::resetScene()
@@ -278,6 +368,7 @@ void MainWindow::on_pushButton_2_clicked()
     if(kind == "Selection Sort") selectionSort();
     if(kind == "Heap Sort") heapSort();
     if(kind == "Merge Sort") mergeSort();
+    if(kind == "Quick Sort") quickSort();
     isSorted = true;
     isRunning = false;
 
