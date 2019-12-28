@@ -64,6 +64,7 @@ private:
     QPen pen = QPen(Qt::NoPen);
     QColor startColor;
     QColor endColor;
+    QColor complementaryColor;
     QVector3D diffColor;
 
     QList<int> array;

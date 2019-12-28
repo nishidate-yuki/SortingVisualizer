@@ -30,27 +30,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::draw(int a, int b)
-{
-    scene->clear();
-    QColor startColor = ui->pushButton_4->palette().color(QPalette::Button);
-    QColor endColor = ui->pushButton_5->palette().color(QPalette::Button);
-    QVector3D diffColor(endColor.red() - startColor.red(),
-                     endColor.green() - startColor.green(),
-                     endColor.blue() - startColor.blue());
-
-
-    for(int i=0; i<arraySize; i++){
-        QColor color(startColor.red()   + diffColor.x()*array[i]/255,
-                     startColor.green() + diffColor.y()*array[i]/255,
-                     startColor.blue()  + diffColor.z()*array[i]/255);
-        QBrush brush(color);
-        if(i == a || i == b) brush.setColor(QColor(0, 0, 255));
-        scene->addRect(barWidth*i, 0, barWidth, -array[i], pen, brush);
-        view->fitInView(scene->sceneRect());
-    }
-}
-
 // --------------------------
 // ---------- Sort ----------
 void MainWindow::simpleSort()
@@ -335,6 +314,21 @@ void MainWindow::resetScene()
     view->setScene(scene);
 }
 
+void MainWindow::draw(int a, int b)
+{
+    scene->clear();
+
+    for(int i=0; i<arraySize; i++){
+        QColor color(startColor.red()   + diffColor.x()*array[i]/255,
+                     startColor.green() + diffColor.y()*array[i]/255,
+                     startColor.blue()  + diffColor.z()*array[i]/255);
+        QBrush brush(color);
+        if(i == a || i == b) brush.setColor(complementaryColor);
+        scene->addRect(barWidth*i, 0, barWidth, -array[i], pen, brush);
+    }
+    view->fitInView(scene->sceneRect());
+}
+
 void MainWindow::updateColor()
 {
     startColor = ui->pushButton_4->palette().color(QPalette::Button);
@@ -342,6 +336,10 @@ void MainWindow::updateColor()
     diffColor = QVector3D(endColor.red() - startColor.red(),
                           endColor.green() - startColor.green(),
                           endColor.blue() - startColor.blue());
+
+    complementaryColor = QColor(255 - (startColor.red()   + diffColor.x()/2.0),
+                                255 - (startColor.green() + diffColor.y()/2.0),
+                                255 - (startColor.blue()  + diffColor.z()/2.0));
 }
 
 void MainWindow::on_pushButton_clicked()
