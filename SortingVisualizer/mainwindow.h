@@ -8,7 +8,10 @@
 #include <QVector3D>
 #include <QTimer>
 #include <QColorDialog>
-#include "graphicsview.h"
+#include <QWidget>
+#include <QPen>
+#include <QGraphicsScene>
+#include <QGraphicsView>
 
 namespace Ui {
 class MainWindow;

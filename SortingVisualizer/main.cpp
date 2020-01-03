@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QStyleFactory>
+#include <QWidget>
 
 void setupDarkPalete(){
     qApp->setStyle(QStyleFactory::create("Fusion"));
