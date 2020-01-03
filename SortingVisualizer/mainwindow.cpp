@@ -11,8 +11,8 @@ MainWindow::MainWindow(QWidget *parent) :
     setUnifiedTitleAndToolBarOnMac(true);
 
     // Setup GraphicsView
-    scene = new GraphicsScene(itemMenu, this);
-    view = new GraphicsView(scene);
+    scene = new QGraphicsScene();
+    view = new QGraphicsView(scene);
     view->setRenderHint(QPainter::Antialiasing);
     view->setMinimumSize(500, 500);
     ui->gridLayout->addWidget(view);
@@ -289,8 +289,10 @@ void MainWindow::generate()
 void MainWindow::generateRandomSequence()
 {
     generateAscendingSequence();
+    int seed = ui->spinBox->value();
+    QRandomGenerator gen =  QRandomGenerator(seed);
     for (int i=0;i<arraySize;i++){
-        int j = qrand()%arraySize;
+        int j = gen.bounded(arraySize-1);
         array.swapItemsAt(i, j);
     }
 }
@@ -310,7 +312,7 @@ void MainWindow::generateDescendingSequence()
 void MainWindow::resetScene()
 {
     delete(scene);
-    scene = new GraphicsScene(itemMenu, this);
+    scene = new QGraphicsScene(this);
     view->setScene(scene);
 }
 
@@ -402,4 +404,10 @@ void MainWindow::on_pushButton_5_clicked()
         ui->pushButton_5->setPalette(pal);
         ui->pushButton_5->update();
     }
+}
+
+void MainWindow::on_comboBox_3_activated(const QString &arg1)
+{
+    ui->label_6->setVisible(arg1 == "Random");
+    ui->spinBox->setVisible(arg1 == "Random");
 }

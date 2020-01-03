@@ -25,16 +25,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        colorbutton.cpp \
-        graphicsscene.cpp \
-        graphicsview.cpp \
         main.cpp \
         mainwindow.cpp
 
 HEADERS += \
-        colorbutton.h \
-        graphicsscene.h \
-        graphicsview.h \
         mainwindow.h
 
 FORMS += \

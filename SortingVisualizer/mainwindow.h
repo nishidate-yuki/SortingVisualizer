@@ -5,7 +5,9 @@
 #include <QList>
 #include <QRandomGenerator>
 #include <QDebug>
-#include "graphicsscene.h"
+#include <QVector3D>
+#include <QTimer>
+#include <QColorDialog>
 #include "graphicsview.h"
 
 namespace Ui {
@@ -55,11 +57,13 @@ private slots:
 
     void on_pushButton_5_clicked();
 
+    void on_comboBox_3_activated(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
-    QMenu *itemMenu;
-    GraphicsScene *scene;
-    GraphicsView *view;
+//    QMenu *itemMenu;
+    QGraphicsScene *scene;
+    QGraphicsView *view;
 
     QPen pen = QPen(Qt::NoPen);
     QColor startColor;
